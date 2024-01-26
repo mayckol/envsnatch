@@ -71,26 +71,42 @@ type Config struct {
 
 func main() {
 	var cfg Config
-	envReader, err := envsnatch.NewEnvSnatch()
+	envReaderWithoutFile, err := envsnatch.NewEnvSnatch() // take the environment variables from the system
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	failedFields, err := envReader.Unmarshal(&cfg)
+	// =================================================================================================================
+	
+	// WITHOUT .env file
+	failedFields, err := envReaderWithoutFile.Unmarshal(&cfg)
 	// type UnmarshalingErr struct {
 	//	Field  string
 	//	Reason string
 	//}
-	
+
 	// treat failedFields as a slice of UnmarshalingErr
 	fmt.Println("Failed fields:", failedFields) // Failed fields is a slice of UnmarshalingErr
-	if err != nil {
-		// other errors
-		log.Fatal(err)
-	}
+	//if err != nil {
+	//	log.Fatal(err) // handle unexpected error
+	//}
 
 	fmt.Printf("Loaded config: %+v\n", cfg)
+
+	// =================================================================================================================
+	
+	// WITH .env file
+	envReaderWithFile, err := envsnatch.NewEnvSnatch()
+	if err != nil {
+		log.Fatal(err)
+	}
+	envReaderWithFile.AddPath(".") // path to the .env file
+	envReaderWithFile.AddFileName(".env") // name of the .env file
+	// PORT=3000
+	// OPTIONAL_FIELD=
+	failedFields, err = envReaderWithFile.Unmarshal(&cfg)
+	fmt.Println("Failed fields needs to be empty:", failedFields) // Failed fields needs to be empty
 }
+
 ```
 
 ## Contributing
