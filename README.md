@@ -76,8 +76,16 @@ func main() {
 		log.Fatal(err)
 	}
 
-	err = envReader.Unmarshal(&cfg)
+	failedFields, err := envReader.Unmarshal(&cfg)
+	// type UnmarshalingErr struct {
+	//	Field  string
+	//	Reason string
+	//}
+	
+	// treat failedFields as a slice of UnmarshalingErr
+	fmt.Println("Failed fields:", failedFields) // Failed fields is a slice of UnmarshalingErr
 	if err != nil {
+		// other errors
 		log.Fatal(err)
 	}
 
