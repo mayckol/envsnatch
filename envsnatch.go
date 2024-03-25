@@ -40,10 +40,9 @@ func (e *EnvSnatch) Unmarshal(config interface{}) (*[]UnmarshalingErr, error) {
 		if err != nil {
 			fmt.Println(".env not found, using environment variables instead")
 		}
-	} else {
-		// load from the system environment variables
-		e.loadEnvVars()
 	}
+
+	e.loadEnvVars()
 
 	val := reflect.ValueOf(config).Elem()
 	typ := val.Type()
