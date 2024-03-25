@@ -38,12 +38,12 @@ func (e *EnvSnatch) Unmarshal(config interface{}) (*[]UnmarshalingErr, error) {
 	if e.path != "" && e.fileName != "" {
 		err := godotenv.Load(e.path + "/" + e.fileName)
 		if err != nil {
-			fmt.Println("Error loading .env file, using environment variables instead")
+			fmt.Println(".env not found, using environment variables instead")
 		}
+	} else {
+		// load from the system environment variables
+		e.loadEnvVars()
 	}
-
-	// Load environment variables
-	e.loadEnvVars()
 
 	val := reflect.ValueOf(config).Elem()
 	typ := val.Type()
